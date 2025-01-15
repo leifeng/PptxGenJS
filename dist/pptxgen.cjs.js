@@ -1,4 +1,4 @@
-/* PptxGenJS 3.13.0-beta.0 @ 2023-05-17T03:15:58.384Z */
+/* PptxGenJS 3.13.1 @ 2025-01-15T03:19:41.325Z */
 'use strict';
 
 var JSZip = require('jszip');
@@ -44,8 +44,8 @@ function __awaiter(thisArg, _arguments, P, generator) {
 }
 
 function __generator(thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -80,6 +80,11 @@ function __spreadArray(to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 }
+
+typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
+    var e = new Error(message);
+    return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
+};
 
 /**
  * PptxGenJS Enums
@@ -5882,7 +5887,12 @@ function genXmlParagraphProperties(textObj, isDefault) {
         }
         else if (!textObj.options.bullet) {
             // We only add this when the user explicitely asks for no bullet, otherwise, it can override the master defaults!
-            paragraphPropXml += ' indent="0" marL="0"'; // FIX: ISSUE#589 - specify zero indent and marL or default will be hanging paragraph
+            if (textObj.options.firstIndent && !isNaN(Number(textObj.options.firstIndent)) && textObj.options.firstIndent > 0) {
+                paragraphPropXml += " indent=\"".concat(textObj.options.firstIndent, "\" marL=\"0\"");
+            }
+            else {
+                paragraphPropXml += ' indent="0" marL="0"'; // FIX: ISSUE#589 - specify zero indent and marL or default will be hanging paragraph
+            }
             strXmlBullet = '<a:buNone/>';
         }
         // OPTION: tabStops
@@ -6212,7 +6222,7 @@ function genXmlTextBody(slideObj) {
         // A: Start paragraph, add paraProps
         strSlideXml += '<a:p>';
         // NOTE: `rtlMode` is like other opts, its propagated up to each text:options, so just check the 1st one
-        var paragraphPropXml = "<a:pPr ".concat(((_a = line[0].options) === null || _a === void 0 ? void 0 : _a.rtlMode) ? ' rtl="1" ' : '');
+        var paragraphPropXml = "<a:pPr indent=\"360000\" ".concat(((_a = line[0].options) === null || _a === void 0 ? void 0 : _a.rtlMode) ? ' rtl="1" ' : '');
         // B: Start paragraph, loop over lines and add text runs
         line.forEach(function (textObj, idx) {
             // A: Set line index
@@ -6713,7 +6723,7 @@ function makeXmlViewProps() {
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-var VERSION = '3.13.0-beta.0-20230416-2140';
+var VERSION = '3.13.1-20250115';
 var PptxGenJS = /** @class */ (function () {
     function PptxGenJS() {
         var _this = this;

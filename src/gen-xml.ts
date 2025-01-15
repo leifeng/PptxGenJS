@@ -872,7 +872,6 @@ function genXmlParagraphProperties (textObj: ISlideObject | TextProps, isDefault
 		if (textObj.options.indentLevel && !isNaN(Number(textObj.options.indentLevel)) && textObj.options.indentLevel > 0) {
 			paragraphPropXml += ` lvl="${textObj.options.indentLevel}"`
 		}
-
 		// OPTION: Paragraph Spacing: Before/After
 		if (textObj.options.paraSpaceBefore && !isNaN(Number(textObj.options.paraSpaceBefore)) && textObj.options.paraSpaceBefore > 0) {
 			strXmlParaSpc += `<a:spcBef><a:spcPts val="${Math.round(textObj.options.paraSpaceBefore * 100)}"/></a:spcBef>`
@@ -930,7 +929,11 @@ function genXmlParagraphProperties (textObj: ISlideObject | TextProps, isDefault
 			strXmlBullet = `<a:buSzPct val="100000"/><a:buChar char="${BULLET_TYPES.DEFAULT}"/>`
 		} else if (!textObj.options.bullet) {
 			// We only add this when the user explicitely asks for no bullet, otherwise, it can override the master defaults!
-			paragraphPropXml += ' indent="0" marL="0"' // FIX: ISSUE#589 - specify zero indent and marL or default will be hanging paragraph
+			if (textObj.options.firstIndent && !isNaN(Number(textObj.options.firstIndent)) && textObj.options.firstIndent > 0) {
+				paragraphPropXml += ` indent="${textObj.options.firstIndent}" marL="0"`
+			} else {
+				paragraphPropXml += ' indent="0" marL="0"' // FIX: ISSUE#589 - specify zero indent and marL or default will be hanging paragraph
+			}
 			strXmlBullet = '<a:buNone/>'
 		}
 
@@ -1255,7 +1258,6 @@ export function genXmlTextBody (slideObj: ISlideObject | TableCell): string {
 		// D: Flush buffer
 		if (idx + 1 === arrTextObjects.length) arrLines.push(arrTexts)
 	})
-
 	// STEP 6: Loop over each line and create paragraph props, text run, etc.
 	arrLines.forEach(line => {
 		let reqsClosingFontSize = false
@@ -1263,7 +1265,7 @@ export function genXmlTextBody (slideObj: ISlideObject | TableCell): string {
 		// A: Start paragraph, add paraProps
 		strSlideXml += '<a:p>'
 		// NOTE: `rtlMode` is like other opts, its propagated up to each text:options, so just check the 1st one
-		let paragraphPropXml = `<a:pPr ${line[0].options?.rtlMode ? ' rtl="1" ' : ''}`
+		let paragraphPropXml = `<a:pPr indent="360000" ${line[0].options?.rtlMode ? ' rtl="1" ' : ''}`
 
 		// B: Start paragraph, loop over lines and add text runs
 		line.forEach((textObj, idx) => {
@@ -1304,7 +1306,6 @@ export function genXmlTextBody (slideObj: ISlideObject | TableCell): string {
 				opts.fontSize = opts.fontSize || textObj.options.fontSize
 			}
 		})
-
 		/* C: Append 'endParaRPr' (when needed) and close current open paragraph
 		 * NOTE: (ISSUE#20, ISSUE#193): Add 'endParaRPr' with font/size props or PPT default (Arial/18pt en-us) is used making row "too tall"/not honoring options
 		 */

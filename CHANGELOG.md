@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Notes
 
+## 3.13.1 - 2025-01-15
+
+- Added `firstIndent` property for text 
+
+
 ## [3.13.0](https://github.com/gitbrent/PptxGenJS/releases/tag/v3.13.0) - 2023-0?-0?
 
 - Added `textDirection` property for text and table cells to allow vertical rotation of text ([gitbrent](https://github.com/gitbrent))

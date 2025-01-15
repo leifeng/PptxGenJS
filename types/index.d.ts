@@ -1267,6 +1267,11 @@ declare namespace PptxGenJS {
 		 * @default 'top'
 		 */
 		valign?: VAlign
+		/**
+		 * 首行缩进
+		 * @default 0
+		 */
+		firstIndent?: number
 	}
 	export interface PlaceholderProps extends PositionProps, TextBaseProps {
 		name: string

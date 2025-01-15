@@ -41,8 +41,16 @@ if (process.argv.length > 2) {
 } else {
 	// B: Omit an arg to run only these below
 	let slide = pptx.addSlide();
-	slide.addText("New Node Presentation", { x: 1.5, y: 1.5, w: 6, h: 2, margin: 0.1, fill: "FFFCCC" });
-	slide.addShape(pptx.shapes.OVAL_CALLOUT, { x: 6, y: 2, w: 3, h: 2, fill: "00FF00", line: "000000", lineSize: 1 }); // Test shapes availablity
+	slide.addText("你还阿道夫爱的色放看阿萨德付款了阿萨德付款了的发生阿萨德改了地方嘎嘎嘎开健康节阿萨德范德萨BONJOU你好", {
+		x: 1.5,
+		y: 1.5,
+		w: 4,
+		h: 3,
+		margin: 0.1,
+		fill: "FFFCCC",
+		firstIndent: 360000,
+	});
+	// slide.addShape(pptx.shapes.OVAL_CALLOUT, { x: 6, y: 2, w: 3, h: 2, fill: "00FF00", line: "000000", lineSize: 1 }); // Test shapes availablity
 
 	// EXAMPLE 1: Saves output file to the local directory where this process is running
 	pptx.writeFile({ fileName: exportName })
@@ -57,17 +65,17 @@ if (process.argv.length > 2) {
 		});
 
 	// EXAMPLE 2: Save in various formats - JSZip offers: ['arraybuffer', 'base64', 'binarystring', 'blob', 'nodebuffer', 'uint8array']
-	pptx.write("base64")
-		.catch((err) => {
-			throw new Error(err);
-		})
-		.then((data) => {
-			console.log(`BASE64 TEST: First 100 chars of 'data':\n`);
-			console.log(data.substring(0, 99));
-		})
-		.catch((err) => {
-			console.log(`ERROR: ${err}`);
-		});
+	// pptx.write("base64")
+	// 	.catch((err) => {
+	// 		throw new Error(err);
+	// 	})
+	// 	.then((data) => {
+	// 		console.log(`BASE64 TEST: First 100 chars of 'data':\n`);
+	// 		console.log(data.substring(0, 99));
+	// 	})
+	// 	.catch((err) => {
+	// 		console.log(`ERROR: ${err}`);
+	// 	});
 
 	// **NOTE** If you continue to use the `pptx` variable, new Slides will be added to the existing set
 }
