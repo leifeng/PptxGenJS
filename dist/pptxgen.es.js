@@ -1,4 +1,4 @@
-/* PptxGenJS 3.13.1 @ 2025-01-15T03:19:41.353Z */
+/* PptxGenJS 3.13.1-beta.1 @ 2025-01-16T02:39:31.164Z */
 import JSZip from 'jszip';
 
 /******************************************************************************
@@ -6216,7 +6216,7 @@ function genXmlTextBody(slideObj) {
         // A: Start paragraph, add paraProps
         strSlideXml += '<a:p>';
         // NOTE: `rtlMode` is like other opts, its propagated up to each text:options, so just check the 1st one
-        var paragraphPropXml = "<a:pPr indent=\"360000\" ".concat(((_a = line[0].options) === null || _a === void 0 ? void 0 : _a.rtlMode) ? ' rtl="1" ' : '');
+        var paragraphPropXml = "<a:pPr ".concat(((_a = line[0].options) === null || _a === void 0 ? void 0 : _a.rtlMode) ? ' rtl="1" ' : '');
         // B: Start paragraph, loop over lines and add text runs
         line.forEach(function (textObj, idx) {
             // A: Set line index

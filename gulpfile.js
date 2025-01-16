@@ -88,19 +88,19 @@ gulp.task('es', () => {
 gulp.task('reactTestCode', () => {
 	return gulp
 		.src(['./dist/pptxgen.es.js'])
-		.pipe(gulp.dest('./demos/react-demo/node_modules/pptxgenjs/dist'))
+		.pipe(gulp.dest('./demos/react-demo/node_modules/hcpptxgenjs/dist'))
 })
 
 gulp.task('reactTestDefs', () => {
 	return gulp
 		.src(['./types/index.d.ts'])
-		.pipe(gulp.dest('./demos/react-demo/node_modules/pptxgenjs/types'))
+		.pipe(gulp.dest('./demos/react-demo/node_modules/hcpptxgenjs/types'))
 })
 
 gulp.task('nodeTest', () => {
 	return gulp
 		.src(['./dist/pptxgen.cjs.js'])
-		.pipe(gulp.dest('./demos/node/node_modules/pptxgenjs/dist'))
+		.pipe(gulp.dest('./demos/node/node_modules/hcpptxgenjs/dist'))
 })
 
 // Build/Deploy (ad-hoc, no watch)

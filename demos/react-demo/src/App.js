@@ -1,5 +1,5 @@
 import React from "react";
-import pptxgen from "pptxgenjs"; // react-app webpack will use package.json `"module": "dist/pptxgen.es.js"` value
+import pptxgen from "hcpptxgenjs"; // react-app webpack will use package.json `"module": "dist/pptxgen.es.js"` value
 import { testMainMethods, testTableMethod } from "./tstest/Test";
 import logo from "./logo.png";
 import "./App.css";
@@ -42,7 +42,7 @@ function App() {
 		//slide.addShape(pptx.ShapeType.rect, { x: 4.36, y: 2.36, w: 5, h: 2.5, fill: pptx.SchemeColor.background2 });
 
 		//slide.addText("React Demo!", { x: 1, y: 1, w: "80%", h: 1, fontSize: 36, fill: "eeeeee", align: "center" });
-		slide.addText("React Demo!", {
+		slide.addText("阿萨德发阿萨德发阿萨德发阿萨德发阿萨德发阿萨德发阿萨德发阿萨德发", {
 			x: 1,
 			y: 0.5,
 			w: "80%",
@@ -51,6 +51,7 @@ function App() {
 			align: "center",
 			fill: { color: "D3E3F3" },
 			color: "008899",
+			firstIndent:360000
 		});
 
 		slide.addChart(pptx.ChartType.radar, dataChartRadar, { x: 1, y: 1.9, w: 8, h: 3 });

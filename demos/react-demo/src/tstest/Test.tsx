@@ -2,7 +2,7 @@
  * Test TypeScript Defs file
  */
 import { IMGBASE64, STARLABS_LOGO_SM } from "../res";
-import pptxgen from "pptxgenjs";
+import pptxgen from "hcpptxgenjs";
 
 export function testMainMethods() {
 	let pptx = new pptxgen();

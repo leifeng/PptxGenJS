@@ -1265,7 +1265,7 @@ export function genXmlTextBody (slideObj: ISlideObject | TableCell): string {
 		// A: Start paragraph, add paraProps
 		strSlideXml += '<a:p>'
 		// NOTE: `rtlMode` is like other opts, its propagated up to each text:options, so just check the 1st one
-		let paragraphPropXml = `<a:pPr indent="360000" ${line[0].options?.rtlMode ? ' rtl="1" ' : ''}`
+		let paragraphPropXml = `<a:pPr ${line[0].options?.rtlMode ? ' rtl="1" ' : ''}`
 
 		// B: Start paragraph, loop over lines and add text runs
 		line.forEach((textObj, idx) => {

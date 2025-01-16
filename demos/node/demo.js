@@ -11,7 +11,7 @@
  */
 
 import { execGenSlidesFuncs, runEveryTest } from "../modules/demos.mjs";
-import pptxgen from "pptxgenjs";
+import pptxgen from "hcpptxgenjs";
 
 // ============================================================================
 
@@ -41,14 +41,23 @@ if (process.argv.length > 2) {
 } else {
 	// B: Omit an arg to run only these below
 	let slide = pptx.addSlide();
-	slide.addText("你还阿道夫爱的色放看阿萨德付款了阿萨德付款了的发生阿萨德改了地方嘎嘎嘎开健康节阿萨德范德萨BONJOU你好", {
-		x: 1.5,
-		y: 1.5,
-		w: 4,
-		h: 3,
-		margin: 0.1,
-		fill: "FFFCCC",
-		firstIndent: 360000,
+	slide.addText('测试123测试测试123测试测试123测试测试123测试测试123测试测试123测试测试123测试测试123测试', {
+		"x": 3.330650702361563,
+		"y": 1.6216663273615635,
+		"w": 2.035830618892508,
+		"h": 0.8,
+		"fontSize": 15,
+		"fontFace": "Microsoft Yahei",
+		"color": "#386d52",
+		"valign": "top",
+		"margin": 7.5,
+		"paraSpaceBefore": 3.75,
+		"lineSpacingMultiple": 1.2,
+		"autoFit": true,
+		"firstIndent": 360000,
+		"objectName": "Text 0",
+		"line": {},
+		"lineSpacing": null,
 	});
 	// slide.addShape(pptx.shapes.OVAL_CALLOUT, { x: 6, y: 2, w: 3, h: 2, fill: "00FF00", line: "000000", lineSize: 1 }); // Test shapes availablity
 
