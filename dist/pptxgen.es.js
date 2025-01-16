@@ -1,4 +1,4 @@
-/* PptxGenJS 3.13.1-beta.1 @ 2025-01-16T02:39:31.164Z */
+/* PptxGenJS 3.13.1-beta.2 @ 2025-01-16T03:16:44.939Z */
 import JSZip from 'jszip';
 
 /******************************************************************************
@@ -6717,7 +6717,7 @@ function makeXmlViewProps() {
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-var VERSION = '3.13.1-20250115';
+var VERSION = '3.13.1-beta.2-20250116';
 var PptxGenJS = /** @class */ (function () {
     function PptxGenJS() {
         var _this = this;
