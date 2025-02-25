@@ -501,8 +501,28 @@ function slideObjectToXml (slide: PresSlide | SlideLayout): string {
 					strSlideXml += '</a:avLst></a:prstGeom>'
 				}
 
-				// Option: FILL
-				strSlideXml += slideItemObj.options.fill ? genXmlColorSelection(slideItemObj.options.fill) : '<a:noFill/>'
+				// shape 简单渐变
+				if (slideItemObj.options.gradient) {
+					strSlideXml += '<a:gradFill flip="none" rotWithShape="1">'
+					strSlideXml += '<a:gsLst>'
+					for (let i = 0; i < slideItemObj.options.gradient.colors.length; i++) {
+						strSlideXml += `<a:gs pos="${slideItemObj.options.gradient.colors[i].pos * 1000}">`
+						strSlideXml += `<a:srgbClr val="${slideItemObj.options.gradient.colors[i].color.replace('#', '').toUpperCase()}">`
+						strSlideXml += `<a:alpha val="${(100 - slideItemObj.options.gradient.colors[i].alpha) * 1000}"/>`
+						strSlideXml += '</a:srgbClr>'
+						strSlideXml += '</a:gs>'
+					}
+					strSlideXml += '</a:gsLst>'
+					if (slideItemObj.options.gradient.type === 'linear') {
+						strSlideXml += `<a:lin ang="${slideItemObj.options.gradient.rotate * 60000}" scaled="1"/><a:tileRect/>`
+					} else {
+						strSlideXml += '<a:path path="circle"><a:fillToRect l="100000" t="100000"/></a:path><a:tileRect r="-100000" b="-100000"/>'
+					}
+					strSlideXml += '</a:gradFill>'
+				} else {
+					// fill
+					strSlideXml += slideItemObj.options.fill ? genXmlColorSelection(slideItemObj.options.fill) : '<a:noFill/>'
+				}
 
 				// shape Type: LINE: line color
 				if (slideItemObj.options.line) {
@@ -608,7 +628,24 @@ function slideObjectToXml (slide: PresSlide | SlideLayout): string {
 				strSlideXml += `  <a:off x="${x}" y="${y}"/>`
 				strSlideXml += `  <a:ext cx="${imgWidth}" cy="${imgHeight}"/>`
 				strSlideXml += ' </a:xfrm>'
-				strSlideXml += ` <a:prstGeom prst="${rounding ? 'ellipse' : 'rect'}"><a:avLst/></a:prstGeom>`
+				if (slideItemObj.options.radius) {
+					// 圆角
+					strSlideXml += ' <a:prstGeom prst="roundRect"><a:avLst><a:gd name="adj" fmla="val 8594"/></a:avLst></a:prstGeom>'
+				} else {
+					strSlideXml += ` <a:prstGeom prst="${rounding ? 'ellipse' : 'rect'}"><a:avLst/></a:prstGeom>`
+				}
+
+				if (slideItemObj.options.outline) {
+					strSlideXml += `<a:ln w="${slideItemObj.options.outline.size}" cmpd="sng"><a:solidFill>`
+					if (slideItemObj.options.outline.color) {
+						strSlideXml += `<a:srgbClr val="${slideItemObj.options.outline.color.toString().replace('#', '')}"/>`
+					}
+					strSlideXml += '</a:solidFill>'
+					if (slideItemObj.options.outline.style === 'dashed') {
+						strSlideXml += '<a:prstDash val="sysDot"/>'
+					}
+					strSlideXml += '</a:ln>'
+				}
 
 				// EFFECTS > SHADOW: REF: @see http://officeopenxml.com/drwSp-effects.php
 				if (slideItemObj.options.shadow && slideItemObj.options.shadow.type !== 'none') {
@@ -928,8 +965,8 @@ function genXmlParagraphProperties (textObj: ISlideObject | TextProps, isDefault
 			}" indent="-${bulletMarL}"`
 			strXmlBullet = `<a:buSzPct val="100000"/><a:buChar char="${BULLET_TYPES.DEFAULT}"/>`
 		} else if (!textObj.options.bullet) {
-			// We only add this when the user explicitely asks for no bullet, otherwise, it can override the master defaults!
-			if (textObj.options.firstIndent && !isNaN(Number(textObj.options.firstIndent)) && textObj.options.firstIndent > 0) {
+			// 首行缩进
+			if (textObj.options?.firstIndent && !isNaN(Number(textObj.options.firstIndent)) && textObj.options.firstIndent > 0) {
 				paragraphPropXml += ` indent="${textObj.options.firstIndent}" marL="0"`
 			} else {
 				paragraphPropXml += ' indent="0" marL="0"' // FIX: ISSUE#589 - specify zero indent and marL or default will be hanging paragraph

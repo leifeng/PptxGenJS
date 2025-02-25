@@ -1,4 +1,4 @@
-/* PptxGenJS 3.13.1-beta.2 @ 2025-01-16T03:16:44.939Z */
+/* PptxGenJS 3.13.1-beta.3 @ 2025-02-25T05:54:43.107Z */
 import JSZip from 'jszip';
 
 /******************************************************************************
@@ -2058,6 +2058,8 @@ function addImageDefinition(target, opt) {
         transparency: opt.transparency || 0,
         objectName: objectName,
         shadow: correctShadowOptions(opt.shadow),
+        outline: opt.outline || null,
+        radius: opt.radius || null
     };
     // STEP 4: Add this image to this Slide Rels (rId/rels count spans all slides! Count all images to get next rId)
     if (strImgExtn === 'svg') {
@@ -5150,6 +5152,7 @@ function slideObjectToXml(slide) {
             locationAttr += ' flipV="1"';
         if (slideItemObj.options.rotate)
             locationAttr += " rot=\"".concat(convertRotationDegrees(slideItemObj.options.rotate), "\"");
+        console.log('slideItemObj', slideItemObj);
         // B: Add OBJECT to the current Slide
         switch (slideItemObj._type) {
             case SLIDE_OBJECT_TYPES.table:
@@ -5467,8 +5470,30 @@ function slideObjectToXml(slide) {
                     }
                     strSlideXml += '</a:avLst></a:prstGeom>';
                 }
-                // Option: FILL
-                strSlideXml += slideItemObj.options.fill ? genXmlColorSelection(slideItemObj.options.fill) : '<a:noFill/>';
+                // shape 简单渐变
+                if (slideItemObj.options.gradient) {
+                    strSlideXml += '<a:gradFill flip="none" rotWithShape="1">';
+                    strSlideXml += '<a:gsLst>';
+                    for (var i = 0; i < slideItemObj.options.gradient.colors.length; i++) {
+                        strSlideXml += "<a:gs pos=\"".concat(slideItemObj.options.gradient.colors[i].pos * 1000, "\">");
+                        strSlideXml += "<a:srgbClr val=\"".concat(slideItemObj.options.gradient.colors[i].color.replace('#', '').toUpperCase(), "\">");
+                        strSlideXml += "<a:alpha val=\"".concat((100 - slideItemObj.options.gradient.colors[i].alpha) * 1000, "\"/>");
+                        strSlideXml += '</a:srgbClr>';
+                        strSlideXml += '</a:gs>';
+                    }
+                    strSlideXml += '</a:gsLst>';
+                    if (slideItemObj.options.gradient.type === 'linear') {
+                        strSlideXml += "<a:lin ang=\"".concat(slideItemObj.options.gradient.rotate * 60000, "\" scaled=\"1\"/><a:tileRect/>");
+                    }
+                    else {
+                        strSlideXml += '<a:path path="circle"><a:fillToRect l="100000" t="100000"/></a:path><a:tileRect r="-100000" b="-100000"/>';
+                    }
+                    strSlideXml += '</a:gradFill>';
+                }
+                else {
+                    // fill
+                    strSlideXml += slideItemObj.options.fill ? genXmlColorSelection(slideItemObj.options.fill) : '<a:noFill/>';
+                }
                 // shape Type: LINE: line color
                 if (slideItemObj.options.line) {
                     strSlideXml += slideItemObj.options.line.width ? "<a:ln w=\"".concat(valToPts(slideItemObj.options.line.width), "\">") : '<a:ln>';
@@ -5565,7 +5590,25 @@ function slideObjectToXml(slide) {
                 strSlideXml += "  <a:off x=\"".concat(x, "\" y=\"").concat(y, "\"/>");
                 strSlideXml += "  <a:ext cx=\"".concat(imgWidth, "\" cy=\"").concat(imgHeight, "\"/>");
                 strSlideXml += ' </a:xfrm>';
-                strSlideXml += " <a:prstGeom prst=\"".concat(rounding ? 'ellipse' : 'rect', "\"><a:avLst/></a:prstGeom>");
+                if (slideItemObj.options.radius) {
+                    // 圆角
+                    strSlideXml += ' <a:prstGeom prst="roundRect"><a:avLst><a:gd name="adj" fmla="val 8594"/></a:avLst></a:prstGeom>';
+                }
+                else {
+                    strSlideXml += " <a:prstGeom prst=\"".concat(rounding ? 'ellipse' : 'rect', "\"><a:avLst/></a:prstGeom>");
+                }
+                console.log('slideItemObj.options', slideItemObj.options);
+                if (slideItemObj.options.outline) {
+                    strSlideXml += "<a:ln w=\"".concat(slideItemObj.options.outline.size, "\" cmpd=\"sng\"><a:solidFill>");
+                    if (slideItemObj.options.outline.color) {
+                        strSlideXml += "<a:srgbClr val=\"".concat(slideItemObj.options.outline.color.toString().replace('#', ''), "\"/>");
+                    }
+                    strSlideXml += '</a:solidFill>';
+                    if (slideItemObj.options.outline.style === 'dashed') {
+                        strSlideXml += '<a:prstDash val="sysDot"/>';
+                    }
+                    strSlideXml += '</a:ln>';
+                }
                 // EFFECTS > SHADOW: REF: @see http://officeopenxml.com/drwSp-effects.php
                 if (slideItemObj.options.shadow && slideItemObj.options.shadow.type !== 'none') {
                     slideItemObj.options.shadow.type = slideItemObj.options.shadow.type || 'outer';
@@ -5790,7 +5833,7 @@ function slideObjectRelationsToXml(slide, defaultRels) {
  * @return {string} XML
  */
 function genXmlParagraphProperties(textObj, isDefault) {
-    var _a, _b;
+    var _a, _b, _c;
     var strXmlBullet = '';
     var strXmlLnSpc = '';
     var strXmlParaSpc = '';
@@ -5880,8 +5923,8 @@ function genXmlParagraphProperties(textObj, isDefault) {
             strXmlBullet = "<a:buSzPct val=\"100000\"/><a:buChar char=\"".concat(BULLET_TYPES.DEFAULT, "\"/>");
         }
         else if (!textObj.options.bullet) {
-            // We only add this when the user explicitely asks for no bullet, otherwise, it can override the master defaults!
-            if (textObj.options.firstIndent && !isNaN(Number(textObj.options.firstIndent)) && textObj.options.firstIndent > 0) {
+            // 首行缩进
+            if (((_c = textObj.options) === null || _c === void 0 ? void 0 : _c.firstIndent) && !isNaN(Number(textObj.options.firstIndent)) && textObj.options.firstIndent > 0) {
                 paragraphPropXml += " indent=\"".concat(textObj.options.firstIndent, "\" marL=\"0\"");
             }
             else {
@@ -6717,7 +6760,7 @@ function makeXmlViewProps() {
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-var VERSION = '3.13.1-beta.2-20250116';
+var VERSION = '3.13.1-beta.3-20250225';
 var PptxGenJS = /** @class */ (function () {
     function PptxGenJS() {
         var _this = this;

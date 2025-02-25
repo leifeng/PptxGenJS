@@ -249,6 +249,11 @@ export interface ShapeLineProps extends ShapeFillProps {
 // used by: chart, slide, table, text
 export interface TextBaseProps {
 	/**
+	* 首行缩进
+	* @default 0
+	*/
+	firstIndent?: number
+	/**
 	 * Horizontal alignment
 	 * @default 'left'
 	 */
@@ -438,11 +443,7 @@ export interface TextBaseProps {
 	 * @default 'top'
 	 */
 	valign?: VAlign
-	/**
- 	* 首行缩进
- 	* @default 0
- 	*/
-	firstIndent?: number
+
 }
 export interface PlaceholderProps extends PositionProps, TextBaseProps {
 	name: string
@@ -571,6 +572,14 @@ export interface ImageProps extends PositionProps, DataOrPathProps, ObjectNamePr
 	 * @example 25 // 25% transparent
 	 */
 	transparency?: number
+	/** 边框，宽度单位磅 */
+	outline?: {
+		size: number
+		color: Color
+		style?: 'solid' | 'dashed'
+	}
+	/** 圆角 */
+	radius?: boolean
 }
 /**
  * Add media (audio/video) to slide
@@ -717,6 +726,18 @@ export interface ShapeProps extends PositionProps, ObjectNameProps {
 	 * @deprecated v3.10.0 - use `objectName`
 	 */
 	shapeName?: string
+	/**
+	 * 渐变
+	 */
+	gradient?: {
+		type: 'linear'
+		rotate: number
+		colors: Array<{
+			color: string
+			pos: number
+			alpha: number
+		}>
+	}
 }
 
 // tables =========================================================================================
@@ -1062,7 +1083,7 @@ export interface TextPropsOptions extends PositionProps, DataOrPathProps, TextBa
 	 * @example [10,5,10,5] // Top margin 10, Right margin 5, Bottom margin 10, Left margin 5
 	 */
 	margin?: Margin
-	outline?: { color: Color, size: number }
+	outline?: { color: Color, size: number, style?: 'solid' | 'dashed' }
 	paraSpaceAfter?: number
 	paraSpaceBefore?: number
 	placeholder?: string
