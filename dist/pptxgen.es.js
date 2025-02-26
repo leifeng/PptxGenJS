@@ -1,4 +1,4 @@
-/* PptxGenJS 3.13.1-beta.3 @ 2025-02-25T05:54:43.107Z */
+/* PptxGenJS 3.13.1-beta.4 @ 2025-02-26T10:00:29.013Z */
 import JSZip from 'jszip';
 
 /******************************************************************************
@@ -5152,7 +5152,6 @@ function slideObjectToXml(slide) {
             locationAttr += ' flipV="1"';
         if (slideItemObj.options.rotate)
             locationAttr += " rot=\"".concat(convertRotationDegrees(slideItemObj.options.rotate), "\"");
-        console.log('slideItemObj', slideItemObj);
         // B: Add OBJECT to the current Slide
         switch (slideItemObj._type) {
             case SLIDE_OBJECT_TYPES.table:
@@ -5597,7 +5596,6 @@ function slideObjectToXml(slide) {
                 else {
                     strSlideXml += " <a:prstGeom prst=\"".concat(rounding ? 'ellipse' : 'rect', "\"><a:avLst/></a:prstGeom>");
                 }
-                console.log('slideItemObj.options', slideItemObj.options);
                 if (slideItemObj.options.outline) {
                     strSlideXml += "<a:ln w=\"".concat(slideItemObj.options.outline.size, "\" cmpd=\"sng\"><a:solidFill>");
                     if (slideItemObj.options.outline.color) {
@@ -5924,7 +5922,7 @@ function genXmlParagraphProperties(textObj, isDefault) {
         }
         else if (!textObj.options.bullet) {
             // 首行缩进
-            if (((_c = textObj.options) === null || _c === void 0 ? void 0 : _c.firstIndent) && !isNaN(Number(textObj.options.firstIndent)) && textObj.options.firstIndent > 0) {
+            if (((_c = textObj.options) === null || _c === void 0 ? void 0 : _c.firstIndent) && textObj.options.firstIndent > 0) {
                 paragraphPropXml += " indent=\"".concat(textObj.options.firstIndent, "\" marL=\"0\"");
             }
             else {
@@ -6275,6 +6273,7 @@ function genXmlTextBody(slideObj) {
             textObj.options.indentLevel = textObj.options.indentLevel || opts.indentLevel;
             textObj.options.paraSpaceBefore = textObj.options.paraSpaceBefore || opts.paraSpaceBefore;
             textObj.options.paraSpaceAfter = textObj.options.paraSpaceAfter || opts.paraSpaceAfter;
+            textObj.options.firstIndent = textObj.options.firstIndent || opts.firstIndent;
             paragraphPropXml = genXmlParagraphProperties(textObj, false);
             strSlideXml += paragraphPropXml.replace('<a:pPr></a:pPr>', ''); // IMPORTANT: Empty "pPr" blocks will generate needs-repair/corrupt msg
             // C: Inherit any main options (color, fontSize, etc.)
@@ -6760,7 +6759,7 @@ function makeXmlViewProps() {
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-var VERSION = '3.13.1-beta.3-20250225';
+var VERSION = '3.13.1-beta.4-20250226';
 var PptxGenJS = /** @class */ (function () {
     function PptxGenJS() {
         var _this = this;

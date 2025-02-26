@@ -873,7 +873,6 @@ function genXmlParagraphProperties (textObj: ISlideObject | TextProps, isDefault
 	let strXmlTabStops = ''
 	const tag = isDefault ? 'a:lvl1pPr' : 'a:pPr'
 	let bulletMarL = valToPts(DEF_BULLET_MARGIN)
-
 	let paragraphPropXml = `<${tag}${textObj.options.rtlMode ? ' rtl="1" ' : ''}`
 
 	// A: Build paragraphProperties
@@ -966,7 +965,7 @@ function genXmlParagraphProperties (textObj: ISlideObject | TextProps, isDefault
 			strXmlBullet = `<a:buSzPct val="100000"/><a:buChar char="${BULLET_TYPES.DEFAULT}"/>`
 		} else if (!textObj.options.bullet) {
 			// 首行缩进
-			if (textObj.options?.firstIndent && !isNaN(Number(textObj.options.firstIndent)) && textObj.options.firstIndent > 0) {
+			if (textObj.options?.firstIndent && textObj.options.firstIndent > 0) {
 				paragraphPropXml += ` indent="${textObj.options.firstIndent}" marL="0"`
 			} else {
 				paragraphPropXml += ' indent="0" marL="0"' // FIX: ISSUE#589 - specify zero indent and marL or default will be hanging paragraph
@@ -979,7 +978,6 @@ function genXmlParagraphProperties (textObj: ISlideObject | TextProps, isDefault
 			const tabStopsXml = textObj.options.tabStops.map(stop => `<a:tab pos="${inch2Emu(stop.position || 1)}" algn="${stop.alignment || 'l'}"/>`).join('')
 			strXmlTabStops = `<a:tabLst>${tabStopsXml}</a:tabLst>`
 		}
-
 		// B: Close Paragraph-Properties
 		// IMPORTANT: strXmlLnSpc, strXmlParaSpc, and strXmlBullet require strict ordering - anything out of order is ignored. (PPT-Online, PPT for Mac)
 		paragraphPropXml += '>' + strXmlLnSpc + strXmlParaSpc + strXmlBullet + strXmlTabStops
@@ -1321,6 +1319,7 @@ export function genXmlTextBody (slideObj: ISlideObject | TableCell): string {
 			textObj.options.indentLevel = textObj.options.indentLevel || opts.indentLevel
 			textObj.options.paraSpaceBefore = textObj.options.paraSpaceBefore || opts.paraSpaceBefore
 			textObj.options.paraSpaceAfter = textObj.options.paraSpaceAfter || opts.paraSpaceAfter
+			textObj.options.firstIndent = textObj.options.firstIndent || opts.firstIndent
 			paragraphPropXml = genXmlParagraphProperties(textObj, false)
 
 			strSlideXml += paragraphPropXml.replace('<a:pPr></a:pPr>', '') // IMPORTANT: Empty "pPr" blocks will generate needs-repair/corrupt msg
