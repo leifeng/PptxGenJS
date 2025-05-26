@@ -1,4 +1,4 @@
-// Type definitions for pptxgenjs 3.13.1-beta.4-20250226
+// Type definitions for pptxgenjs 3.13.1-beta.6-20250516
 // Project: https://gitbrent.github.io/PptxGenJS/
 // Definitions by: Brent Ely <https://github.com/gitbrent/>
 //                 Michael Beaumont <https://github.com/michaelbeaumont>

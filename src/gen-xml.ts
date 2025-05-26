@@ -516,7 +516,7 @@ function slideObjectToXml (slide: PresSlide | SlideLayout): string {
 					if (slideItemObj.options.gradient.type === 'linear') {
 						strSlideXml += `<a:lin ang="${slideItemObj.options.gradient.rotate * 60000}" scaled="1"/><a:tileRect/>`
 					} else {
-						strSlideXml += '<a:path path="circle"><a:fillToRect l="100000" t="100000"/></a:path><a:tileRect r="-100000" b="-100000"/>'
+						strSlideXml += '<a:path path="circle"><a:fillToRect l="50000" t="50000" r="50000" b="50000" /></a:path><a:tileRect />'
 					}
 					strSlideXml += '</a:gradFill>'
 				} else {

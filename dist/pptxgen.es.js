@@ -1,4 +1,4 @@
-/* PptxGenJS 3.13.1-beta.4 @ 2025-02-26T10:00:29.013Z */
+/* PptxGenJS 3.13.1-beta.6 @ 2025-05-16T09:32:45.413Z */
 import JSZip from 'jszip';
 
 /******************************************************************************
@@ -5485,7 +5485,7 @@ function slideObjectToXml(slide) {
                         strSlideXml += "<a:lin ang=\"".concat(slideItemObj.options.gradient.rotate * 60000, "\" scaled=\"1\"/><a:tileRect/>");
                     }
                     else {
-                        strSlideXml += '<a:path path="circle"><a:fillToRect l="100000" t="100000"/></a:path><a:tileRect r="-100000" b="-100000"/>';
+                        strSlideXml += '<a:path path="circle"><a:fillToRect l="50000" t="50000" r="50000" b="50000" /></a:path><a:tileRect />';
                     }
                     strSlideXml += '</a:gradFill>';
                 }
@@ -6759,7 +6759,7 @@ function makeXmlViewProps() {
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-var VERSION = '3.13.1-beta.4-20250226';
+var VERSION = '3.13.1-beta.6-20250516';
 var PptxGenJS = /** @class */ (function () {
     function PptxGenJS() {
         var _this = this;
