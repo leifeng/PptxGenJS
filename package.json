@@ -1,6 +1,6 @@
 {
   "name": "hcpptxgenjs",
-  "version": "3.13.1-beta.6",
+  "version": "3.13.1-beta.8",
   "author": {
     "name": "zcl",
     "url": "https://github.com/leifeng"
@@ -17,6 +17,7 @@
   "scripts": {
     "build": "rollup -c",
     "start": "gulp",
+    "build:node": "gulp node",
     "ship": "gulp ship",
     "defs": "gulp reactTestDefs",
     "watch": "rollup -cw",

@@ -63,7 +63,17 @@ export function getUuid (uuidFormat: string): string {
 export function encodeXmlEntities (xml: string): string {
 	// NOTE: Dont use short-circuit eval here as value c/b "0" (zero) etc.!
 	if (typeof xml === 'undefined' || xml == null) return ''
-	return xml.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;')
+	// Split the string by <m:oMath> elements to preserve math content
+	const parts = xml.toString().split(/(<m:oMath[^>]*>[\s\S]*?<\/m:oMath>)/g)
+	// Process only the parts that are not inside <m:oMath> tags
+	return parts.map((part, index) => {
+		// Odd indices are the math content that should not be encoded
+		if (index % 2 === 1 && part.startsWith('<m:oMath') && part.includes('</m:oMath>')) {
+			return part
+		}
+		// Even indices are outside math tags and should be encoded
+		return part.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;')
+	}).join('')
 }
 
 /**
@@ -272,4 +282,40 @@ export function correctShadowOptions (ShadowProps: ShadowProps): ShadowProps | u
 	}
 
 	return ShadowProps
+}
+
+// STEP 6: 新增函数 - 解析包含数学公式的文本
+export function parseMixedText (text: string): Array<{ type: 'text' | 'math', content: string }> {
+	const result = []
+	const mathRegex = /(<m:oMath[^>]*>.*?<\/m:oMath>)/g
+	let lastIndex = 0
+	let match
+
+	while ((match = mathRegex.exec(text)) !== null) {
+		// 添加前面的普通文本
+		if (match.index > lastIndex) {
+			result.push({
+				type: 'text',
+				content: text.slice(lastIndex, match.index)
+			})
+		}
+
+		// 添加数学公式标签
+		result.push({
+			type: 'math',
+			content: match[1]
+		})
+
+		lastIndex = match.index + match[0].length
+	}
+
+	// 添加最后剩余的文本
+	if (lastIndex < text.length) {
+		result.push({
+			type: 'text',
+			content: text.slice(lastIndex)
+		})
+	}
+
+	return result
 }

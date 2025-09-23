@@ -1015,6 +1015,10 @@ export interface TextPropsOptions extends PositionProps, DataOrPathProps, TextBa
 		wrap?: boolean
 	}
 	_lineIdx?: number
+	/** 公式显示方式 */
+	mathBlock?: boolean
+	/** 是公式 */
+	isMath?: boolean
 
 	baseline?: number
 	/**

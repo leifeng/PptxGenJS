@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Notes
+## 3.13.1-beta.8-20250923
+
+- Added `mathBlock` property for text  
+- Added `isMath` property for text  
+
 ## 3.13.1-beta.5-20250516
 
 - fixed `gradient radial` property for shape 

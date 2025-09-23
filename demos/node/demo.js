@@ -67,30 +67,8 @@ if (process.argv.length > 2) {
 	// B: Omit an arg to run only these below
 	let slide = pptx.addSlide();
 	slide.addText(
-		[
-			{
-				text: "测试测试菜单测试的所产生的冯绍峰大大实得分阿斯顿飞啊的覆盖申达股份申达股份",
-				options: {
-					color: "#386d52",
-					objectName: "Text 0",
-					line: {},
-					lineSpacing: null,
-					lineSpacingMultiple: 1.2,		
-					paraSpaceBefore: 3.6,
-					x: 3.3439390120967745,
-					y: 1.0701684907834101,
-					w: 2.880184331797235,
-					h: 0.92,
-					fontSize: 11.52,
-					fontFace: "Source Han Sans CN Regular",
-					valign: "top",
-					margin: 7.2,
-					autoFit: true,
-					firstIndent: 952500,
-				},
-			},
-		],
-		{
+		'<m:oMath xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><m:r><m:t xml:space="preserve">y=</m:t></m:r><m:r><m:t xml:space="preserve">(−1.5</m:t></m:r><m:sSup><m:sSupPr><m:ctrlPr/></m:sSupPr><m:e><m:r><m:t xml:space="preserve">)</m:t></m:r></m:e><m:sup><m:r><m:t xml:space="preserve">2</m:t></m:r></m:sup></m:sSup><m:r><m:t xml:space="preserve">+3×(−1.5)−4=−6.25</m:t></m:r></m:oMath>'
+		,{
 			x: 3.3439390120967745,
 			y: 1.0701684907834101,
 			w: 2.880184331797235,
@@ -107,6 +85,8 @@ if (process.argv.length > 2) {
 			objectName: "Text 0",
 			line: {},
 			lineSpacing: null,
+			isMath: true,
+			mathBlock:true
 		}
 	);
 	// slide.addImage({

@@ -112,6 +112,10 @@ gulp.task('default', gulp.series('build', 'min', 'cjs', 'es', 'bundle', 'reactTe
 	console.log('... ./dist/*.js files created!')
 })
 
+gulp.task('node', gulp.series('build',  'cjs',  'nodeTest'), () => {
+	console.log('... ./dist/*.js files created!')
+})
+
 // Watch
 exports.default = function() {
 	watch('src/*.ts', series('build', 'min', 'cjs', 'es', 'bundle', 'nodeTest'))

@@ -142,7 +142,7 @@ async function createSvgPngPreview (rel: ISlideRelMedia): Promise<string> {
 			// "SecurityError: Failed to execute 'toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported."
 			// when the canvas.toDataURL call executes below.
 			try {
-				rel.data = canvas.toDataURL(rel.type)
+				rel.data = canvas.toDataURL(rel.type, 1)
 				resolve('done')
 			} catch (ex) {
 				image.onerror(ex)

@@ -40,6 +40,7 @@ import {
 	getSmartParseNumber,
 	getUuid,
 	inch2Emu,
+	parseMixedText,
 	valToPts,
 } from './gen-utils'
 
@@ -101,7 +102,6 @@ function slideObjectToXml (slide: PresSlide | SlideLayout): string {
 	strSlideXml += '<p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr>'
 	strSlideXml += '<p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/>'
 	strSlideXml += '<a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>'
-
 	// STEP 3: Loop over all Slide.data objects and add them to this slide
 	slide._slideObjects.forEach((slideItemObj: ISlideObject, idx: number) => {
 		let x = 0
@@ -1234,7 +1234,6 @@ export function genXmlTextBody (slideObj: ISlideObject | TableCell): string {
 		// NOTE: use cast as text is TextProps[]|TableCell[] and their `options` dont overlap (they share the same TextBaseProps though)
 		tmpTextObjects = (slideObj.text as TextProps[]).map(item => ({ text: item.text, options: item.options }))
 	}
-
 	// STEP 4: Iterate over text objects, set text/options, break into pieces if '\n'/breakLine found
 	tmpTextObjects.forEach((itext, idx) => {
 		if (!itext.text) itext.text = ''
@@ -1334,7 +1333,29 @@ export function genXmlTextBody (slideObj: ISlideObject | TableCell): string {
 			})
 
 			// D: Add formatted textrun
-			strSlideXml += genXmlTextRun(textObj)
+			if (typeof textObj.text === 'string' && textObj.text.includes('<m:oMath') && textObj.options.isMath) {
+				const parsedItems = parseMixedText(textObj.text)
+				parsedItems.forEach(item => {
+					if (item.type === 'text') {
+						// 处理普通文本
+						if (item.content) {
+							const tempTextObj = { ...textObj, text: item.content }
+							strSlideXml += genXmlTextRun(tempTextObj)
+						}
+					} else if (item.type === 'math') {
+						// 处理数学公式，块级
+						if (textObj.options.mathBlock) {
+							strSlideXml += `<a14:m><m:oMathPara xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"><m:oMathParaPr><m:jc m:val="center" /></m:oMathParaPr>${item.content}</m:oMathPara></a14:m>`
+						} else {
+						// 处理数学公式，行内
+							strSlideXml += `<a14:m>${item.content}</a14:m>`
+						}
+					}
+				})
+			} else {
+				// E: Add formatted textrun (原有逻辑)
+				strSlideXml += genXmlTextRun(textObj)
+			}
 
 			// E: Flag close fontSize for empty [lineBreak] elements
 			if ((!textObj.text && opts.fontSize) || textObj.options.fontSize) {
@@ -1585,7 +1606,7 @@ export function makeXmlSlide (slide: PresSlide): string {
 	return (
 		`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>${CRLF}` +
 		'<p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" ' +
-		'xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"' +
+		'xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:a14="http://schemas.microsoft.com/office/drawing/2010/main"' +
 		`${slide?.hidden ? ' show="0"' : ''}>` +
 		`${slideObjectToXml(slide)}` +
 		'<p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>'

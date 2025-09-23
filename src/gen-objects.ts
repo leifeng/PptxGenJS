@@ -1102,7 +1102,6 @@ export function addTextDefinition (target: PresSlide, text: TextProps[], opts: T
 
 	// STEP 3: Create hyperlinks
 	createHyperlinkRels(target, newObject.text || '')
-
 	// LAST: Add object to Slide
 	target._slideObjects.push(newObject)
 }
@@ -1175,7 +1174,6 @@ export function addBackgroundDefinition (props: BackgroundProps, target: SlideLa
  */
 function createHyperlinkRels (target: PresSlide, text: number | string | ISlideObject | TextProps | TextProps[] | TableCell[][]): void {
 	let textObjs = []
-
 	// Only text objects can have hyperlinks, bail when text param is plain text
 	if (typeof text === 'string' || typeof text === 'number') return
 	// IMPORTANT: "else if" Array.isArray must come before typeof===object! Otherwise, code will exhaust recursion!

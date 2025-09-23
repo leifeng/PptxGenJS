@@ -1,4 +1,4 @@
-/* PptxGenJS 3.13.1-beta.6 @ 2025-05-16T09:32:45.413Z */
+/* PptxGenJS 3.13.1-beta.8 @ 2025-09-23T03:29:09.024Z */
 import JSZip from 'jszip';
 
 /******************************************************************************
@@ -720,7 +720,17 @@ function encodeXmlEntities(xml) {
     // NOTE: Dont use short-circuit eval here as value c/b "0" (zero) etc.!
     if (typeof xml === 'undefined' || xml == null)
         return '';
-    return xml.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+    // Split the string by <m:oMath> elements to preserve math content
+    var parts = xml.toString().split(/(<m:oMath[^>]*>[\s\S]*?<\/m:oMath>)/g);
+    // Process only the parts that are not inside <m:oMath> tags
+    return parts.map(function (part, index) {
+        // Odd indices are the math content that should not be encoded
+        if (index % 2 === 1 && part.startsWith('<m:oMath') && part.includes('</m:oMath>')) {
+            return part;
+        }
+        // Even indices are outside math tags and should be encoded
+        return part.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+    }).join('');
 }
 /**
  * Convert inches into EMU
@@ -909,6 +919,36 @@ function correctShadowOptions(ShadowProps) {
         }
     }
     return ShadowProps;
+}
+// STEP 6: 新增函数 - 解析包含数学公式的文本
+function parseMixedText(text) {
+    var result = [];
+    var mathRegex = /(<m:oMath[^>]*>.*?<\/m:oMath>)/g;
+    var lastIndex = 0;
+    var match;
+    while ((match = mathRegex.exec(text)) !== null) {
+        // 添加前面的普通文本
+        if (match.index > lastIndex) {
+            result.push({
+                type: 'text',
+                content: text.slice(lastIndex, match.index)
+            });
+        }
+        // 添加数学公式标签
+        result.push({
+            type: 'math',
+            content: match[1]
+        });
+        lastIndex = match.index + match[0].length;
+    }
+    // 添加最后剩余的文本
+    if (lastIndex < text.length) {
+        result.push({
+            type: 'text',
+            content: text.slice(lastIndex)
+        });
+    }
+    return result;
 }
 
 /**
@@ -5016,7 +5056,7 @@ function createSvgPngPreview(rel) {
                             // "SecurityError: Failed to execute 'toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported."
                             // when the canvas.toDataURL call executes below.
                             try {
-                                rel.data = canvas.toDataURL(rel.type);
+                                rel.data = canvas.toDataURL(rel.type, 1);
                                 resolve('done');
                             }
                             catch (ex) {
@@ -6291,7 +6331,32 @@ function genXmlTextBody(slideObj) {
                     textObj.options[key] = val;
             });
             // D: Add formatted textrun
-            strSlideXml += genXmlTextRun(textObj);
+            if (typeof textObj.text === 'string' && textObj.text.includes('<m:oMath') && textObj.options.isMath) {
+                var parsedItems = parseMixedText(textObj.text);
+                parsedItems.forEach(function (item) {
+                    if (item.type === 'text') {
+                        // 处理普通文本
+                        if (item.content) {
+                            var tempTextObj = __assign(__assign({}, textObj), { text: item.content });
+                            strSlideXml += genXmlTextRun(tempTextObj);
+                        }
+                    }
+                    else if (item.type === 'math') {
+                        // 处理数学公式，块级
+                        if (textObj.options.mathBlock) {
+                            strSlideXml += "<a14:m><m:oMathPara xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\"><m:oMathParaPr><m:jc m:val=\"center\" /></m:oMathParaPr>".concat(item.content, "</m:oMathPara></a14:m>");
+                        }
+                        else {
+                            // 处理数学公式，行内
+                            strSlideXml += "<a14:m>".concat(item.content, "</a14:m>");
+                        }
+                    }
+                });
+            }
+            else {
+                // E: Add formatted textrun (原有逻辑)
+                strSlideXml += genXmlTextRun(textObj);
+            }
             // E: Flag close fontSize for empty [lineBreak] elements
             if ((!textObj.text && opts.fontSize) || textObj.options.fontSize) {
                 reqsClosingFontSize = true;
@@ -6473,7 +6538,7 @@ function makeXmlPresentationRels(slides) {
 function makeXmlSlide(slide) {
     return ("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>".concat(CRLF) +
         '<p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" ' +
-        'xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"' +
+        'xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:a14="http://schemas.microsoft.com/office/drawing/2010/main"' +
         "".concat((slide === null || slide === void 0 ? void 0 : slide.hidden) ? ' show="0"' : '', ">") +
         "".concat(slideObjectToXml(slide)) +
         '<p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>');
@@ -6759,7 +6824,7 @@ function makeXmlViewProps() {
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-var VERSION = '3.13.1-beta.6-20250516';
+var VERSION = '3.13.1-beta.8-20250923';
 var PptxGenJS = /** @class */ (function () {
     function PptxGenJS() {
         var _this = this;
