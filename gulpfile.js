@@ -50,7 +50,7 @@ gulp.task('min', () => {
 	return gulp
 		.src(['./src/bld/pptxgen.gulp.js'])
 		.pipe(concat('pptxgen.min.js'))
-		.pipe(uglify())
+		.pipe(uglify({ compress: { drop_console: true } }))
 		.pipe(insert.prepend('/* PptxGenJS ' + pkg.version + ' @ ' + new Date().toISOString() + ' */\n'))
 		.pipe(source.init())
 		.pipe(ignore.exclude(['**/*.map']))
@@ -62,7 +62,7 @@ gulp.task('bundle', () => {
 	return gulp
 		.src(['./libs/*', './src/bld/pptxgen.gulp.js'])
 		.pipe(concat('pptxgen.bundle.js'))
-		.pipe(uglify())
+		.pipe(uglify({ compress: { drop_console: true } }))
 		.pipe(insert.prepend('/* PptxGenJS ' + pkg.version + ' @ ' + new Date().toISOString() + ' */\n'))
 		.pipe(source.init())
 		.pipe(ignore.exclude(['**/*.map']))
@@ -74,6 +74,7 @@ gulp.task('bundle', () => {
 gulp.task('cjs', () => {
 	return gulp
 		.src(['./src/bld/pptxgen.cjs.js'])
+		.pipe(insert.transform((contents) => contents.replace(/console\.log\s*\(/g, 'void(')))
 		.pipe(insert.prepend('/* PptxGenJS ' + pkg.version + ' @ ' + new Date().toISOString() + ' */\n'))
 		.pipe(gulp.dest('./dist/'))
 })
@@ -81,6 +82,7 @@ gulp.task('cjs', () => {
 gulp.task('es', () => {
 	return gulp
 		.src(['./src/bld/pptxgen.es.js'])
+		.pipe(insert.transform((contents) => contents.replace(/console\.log\s*\(/g, 'void(')))
 		.pipe(insert.prepend('/* PptxGenJS ' + pkg.version + ' @ ' + new Date().toISOString() + ' */\n'))
 		.pipe(gulp.dest('./dist/'))
 })

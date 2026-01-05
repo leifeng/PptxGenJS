@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Notes
 
+## 3.13.2-20260105
+
+- remove console.log
+
 ## 3.13.1-beta.10-20260105
 
 - Added fontFaceEn property for English font face

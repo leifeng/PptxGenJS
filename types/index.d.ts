@@ -1,4 +1,4 @@
-// Type definitions for pptxgenjs 3.13.1-beta.10-20260105
+// Type definitions for pptxgenjs 3.13.2-20260105
 // Project: https://gitbrent.github.io/PptxGenJS/
 // Definitions by: Brent Ely <https://github.com/gitbrent/>
 //                 Michael Beaumont <https://github.com/michaelbeaumont>
@@ -1353,6 +1353,7 @@ declare namespace PptxGenJS {
 		 * { type: 'outer', color: '000000', opacity: 0.5, blur: 20,  offset: 20, angle: 270 }
 		 */
 		shadow?: ShadowProps
+		radius?: number
 		/**
 		 * Image sizing options
 		 */
@@ -1400,6 +1401,11 @@ declare namespace PptxGenJS {
 		 * @example 25 // 25% transparent
 		 */
 		transparency?: number
+		outline?:{
+			color?: Color
+			size?: number
+			styles?: string
+		}
 	}
 	/**
 	 * Add media (audio/video) to slide
@@ -1546,6 +1552,12 @@ declare namespace PptxGenJS {
 		 * @deprecated v3.10.0 - use `objectName`
 		 */
 		shapeName?: string
+		gradient?:{
+			colors: Array<{
+				color: Color
+				alpha: number
+			}>
+		}
 	}
 
 	// tables =========================================================================================

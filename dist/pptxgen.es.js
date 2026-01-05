@@ -1,4 +1,4 @@
-/* PptxGenJS 3.13.1-beta.10 @ 2026-01-05T03:53:04.955Z */
+/* PptxGenJS 3.13.2 @ 2026-01-05T06:26:16.565Z */
 import JSZip from 'jszip';
 
 /******************************************************************************
@@ -731,7 +731,7 @@ function encodeXmlEntities(xml) {
         // Even indices are outside math tags and should be encoded
         return part.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
     }).join('');
-    console.log('str', str);
+    void('str', str);
     return str;
 }
 /**
@@ -978,10 +978,10 @@ function parseTextToLines(cell, colWidth, verbose) {
         if (cell.options && cell.options.autoPageCharWeight) {
             let CHR1 = 2.3 + (cell.options && cell.options.autoPageCharWeight ? cell.options.autoPageCharWeight : 0) // Character Constant
             let CPL1 = ((colWidth / ONEPT) * EMU) / ((cell.options && cell.options.fontSize ? cell.options.fontSize : DEF_FONT_SIZE) / CHR1) // Chars-Per-Line
-            console.log(`cell.options.autoPageCharWeight: '${cell.options.autoPageCharWeight}' => CPL: ${CPL1}`)
+            void(`cell.options.autoPageCharWeight: '${cell.options.autoPageCharWeight}' => CPL: ${CPL1}`)
             let CHR2 = 2.3 + 0
             let CPL2 = ((colWidth / ONEPT) * EMU) / ((cell.options && cell.options.fontSize ? cell.options.fontSize : DEF_FONT_SIZE) / CHR2) // Chars-Per-Line
-            console.log(`cell.options.autoPageCharWeight: '0' => CPL: ${CPL2}`)
+            void(`cell.options.autoPageCharWeight: '0' => CPL: ${CPL2}`)
         }
     */
     /**
@@ -1010,9 +1010,9 @@ function parseTextToLines(cell, colWidth, verbose) {
         inputCells = cell.text;
     }
     if (verbose) {
-        console.log('[1/4] inputCells');
-        inputCells.forEach(function (cell, idx) { return console.log("[1/4] [".concat(idx + 1, "] cell: ").concat(JSON.stringify(cell))); });
-        // console.log('...............................................\n\n')
+        void('[1/4] inputCells');
+        inputCells.forEach(function (cell, idx) { return void("[1/4] [".concat(idx + 1, "] cell: ").concat(JSON.stringify(cell))); });
+        // void('...............................................\n\n')
     }
     // STEP 2: Group table cells into lines based on "\n" or `breakLine` prop
     /**
@@ -1044,7 +1044,7 @@ function parseTextToLines(cell, colWidth, verbose) {
             }
             if ((_a = cell.options) === null || _a === void 0 ? void 0 : _a.breakLine) {
                 if (verbose)
-                    console.log("inputCells: new line > ".concat(JSON.stringify(newLine)));
+                    void("inputCells: new line > ".concat(JSON.stringify(newLine)));
                 inputLines1.push(newLine);
                 newLine = [];
             }
@@ -1056,9 +1056,9 @@ function parseTextToLines(cell, colWidth, verbose) {
         }
     });
     if (verbose) {
-        console.log("[2/4] inputLines1 (".concat(inputLines1.length, ")"));
-        inputLines1.forEach(function (line, idx) { return console.log("[2/4] [".concat(idx + 1, "] line: ").concat(JSON.stringify(line))); });
-        // console.log('...............................................\n\n')
+        void("[2/4] inputLines1 (".concat(inputLines1.length, ")"));
+        inputLines1.forEach(function (line, idx) { return void("[2/4] [".concat(idx + 1, "] line: ").concat(JSON.stringify(line))); });
+        // void('...............................................\n\n')
     }
     // STEP 3: Tokenize every text object into words (then it's really easy to assemble lines below without having to break text, add its `options`, etc.)
     inputLines1.forEach(function (line) {
@@ -1077,9 +1077,9 @@ function parseTextToLines(cell, colWidth, verbose) {
         });
     });
     if (verbose) {
-        console.log("[3/4] inputLines2 (".concat(inputLines2.length, ")"));
-        inputLines2.forEach(function (line) { return console.log("[3/4] line: ".concat(JSON.stringify(line))); });
-        // console.log('...............................................\n\n')
+        void("[3/4] inputLines2 (".concat(inputLines2.length, ")"));
+        inputLines2.forEach(function (line) { return void("[3/4] line: ".concat(JSON.stringify(line))); });
+        // void('...............................................\n\n')
     }
     // STEP 4: Group cells/words into lines based upon space consumed by word letters
     inputLines2.forEach(function (line) {
@@ -1088,7 +1088,7 @@ function parseTextToLines(cell, colWidth, verbose) {
         line.forEach(function (word) {
             // A: create new line when horizontal space is exhausted
             if (strCurrLine.length + word.text.length > CPL) {
-                // if (verbose) console.log(`STEP 4: New line added: (${strCurrLine.length} + ${word.text.length} > ${CPL})`);
+                // if (verbose) void(`STEP 4: New line added: (${strCurrLine.length} + ${word.text.length} > ${CPL})`);
                 parsedLines.push(lineCells);
                 lineCells = [];
                 strCurrLine = '';
@@ -1103,9 +1103,9 @@ function parseTextToLines(cell, colWidth, verbose) {
             parsedLines.push(lineCells);
     });
     if (verbose) {
-        console.log("[4/4] parsedLines (".concat(parsedLines.length, ")"));
-        parsedLines.forEach(function (line, idx) { return console.log("[4/4] [Line ".concat(idx + 1, "]:\n").concat(JSON.stringify(line))); });
-        console.log('...............................................\n\n');
+        void("[4/4] parsedLines (".concat(parsedLines.length, ")"));
+        parsedLines.forEach(function (line, idx) { return void("[4/4] [Line ".concat(idx + 1, "]:\n").concat(JSON.stringify(line))); });
+        void('...............................................\n\n');
     }
     // Done:
     return parsedLines;
@@ -1139,8 +1139,8 @@ function getSlidesForTableRows(tableRows, tableProps, presLayout, masterSlide) {
         if (tableRowSlides.length > 0)
             emuStartY = inch2Emu(tableProps.autoPageSlideStartY || tableProps.newSlideStartY || arrInchMargins[0]);
         emuSlideTabH = (tablePropH || presLayout.height) - emuStartY - inch2Emu(arrInchMargins[2]);
-        // console.log(`| startY .......................................... = ${(emuStartY / EMU).toFixed(1)}`)
-        // console.log(`| emuSlideTabH .................................... = ${(emuSlideTabH / EMU).toFixed(1)}`)
+        // void(`| startY .......................................... = ${(emuStartY / EMU).toFixed(1)}`)
+        // void(`| emuSlideTabH .................................... = ${(emuSlideTabH / EMU).toFixed(1)}`)
         if (tableRowSlides.length > 1) {
             // D: RULE: Use margins for starting point after the initial Slide, not `opt.y` (ISSUE #43, ISSUE #47, ISSUE #48)
             if (typeof tableProps.autoPageSlideStartY === 'number') {
@@ -1159,25 +1159,25 @@ function getSlidesForTableRows(tableRows, tableProps, presLayout, masterSlide) {
         }
     }
     if (tableProps.verbose) {
-        console.log('[[VERBOSE MODE]]');
-        console.log('|-- TABLE PROPS --------------------------------------------------------|');
-        console.log("| presLayout.width ................................ = ".concat((presLayout.width / EMU).toFixed(1)));
-        console.log("| presLayout.height ............................... = ".concat((presLayout.height / EMU).toFixed(1)));
-        console.log("| tableProps.x .................................... = ".concat(typeof tableProps.x === 'number' ? (tableProps.x / EMU).toFixed(1) : tableProps.x));
-        console.log("| tableProps.y .................................... = ".concat(typeof tableProps.y === 'number' ? (tableProps.y / EMU).toFixed(1) : tableProps.y));
-        console.log("| tableProps.w .................................... = ".concat(typeof tableProps.w === 'number' ? (tableProps.w / EMU).toFixed(1) : tableProps.w));
-        console.log("| tableProps.h .................................... = ".concat(typeof tableProps.h === 'number' ? (tableProps.h / EMU).toFixed(1) : tableProps.h));
-        console.log("| tableProps.slideMargin .......................... = ".concat(tableProps.slideMargin ? String(tableProps.slideMargin) : ''));
-        console.log("| tableProps.margin ............................... = ".concat(String(tableProps.margin)));
-        console.log("| tableProps.colW ................................. = ".concat(String(tableProps.colW)));
-        console.log("| tableProps.autoPageSlideStartY .................. = ".concat(tableProps.autoPageSlideStartY));
-        console.log("| tableProps.autoPageCharWeight ................... = ".concat(tableProps.autoPageCharWeight));
-        console.log('|-- CALCULATIONS -------------------------------------------------------|');
-        console.log("| tablePropX ...................................... = ".concat(tablePropX / EMU));
-        console.log("| tablePropY ...................................... = ".concat(tablePropY / EMU));
-        console.log("| tablePropW ...................................... = ".concat(tablePropW / EMU));
-        console.log("| tablePropH ...................................... = ".concat(tablePropH / EMU));
-        console.log("| tableCalcW ...................................... = ".concat(tableCalcW / EMU));
+        void('[[VERBOSE MODE]]');
+        void('|-- TABLE PROPS --------------------------------------------------------|');
+        void("| presLayout.width ................................ = ".concat((presLayout.width / EMU).toFixed(1)));
+        void("| presLayout.height ............................... = ".concat((presLayout.height / EMU).toFixed(1)));
+        void("| tableProps.x .................................... = ".concat(typeof tableProps.x === 'number' ? (tableProps.x / EMU).toFixed(1) : tableProps.x));
+        void("| tableProps.y .................................... = ".concat(typeof tableProps.y === 'number' ? (tableProps.y / EMU).toFixed(1) : tableProps.y));
+        void("| tableProps.w .................................... = ".concat(typeof tableProps.w === 'number' ? (tableProps.w / EMU).toFixed(1) : tableProps.w));
+        void("| tableProps.h .................................... = ".concat(typeof tableProps.h === 'number' ? (tableProps.h / EMU).toFixed(1) : tableProps.h));
+        void("| tableProps.slideMargin .......................... = ".concat(tableProps.slideMargin ? String(tableProps.slideMargin) : ''));
+        void("| tableProps.margin ............................... = ".concat(String(tableProps.margin)));
+        void("| tableProps.colW ................................. = ".concat(String(tableProps.colW)));
+        void("| tableProps.autoPageSlideStartY .................. = ".concat(tableProps.autoPageSlideStartY));
+        void("| tableProps.autoPageCharWeight ................... = ".concat(tableProps.autoPageCharWeight));
+        void('|-- CALCULATIONS -------------------------------------------------------|');
+        void("| tablePropX ...................................... = ".concat(tablePropX / EMU));
+        void("| tablePropY ...................................... = ".concat(tablePropY / EMU));
+        void("| tablePropW ...................................... = ".concat(tablePropW / EMU));
+        void("| tablePropH ...................................... = ".concat(tablePropH / EMU));
+        void("| tableCalcW ...................................... = ".concat(tableCalcW / EMU));
     }
     // STEP 1: Calculate margins
     {
@@ -1198,7 +1198,7 @@ function getSlidesForTableRows(tableRows, tableProps, presLayout, masterSlide) {
                 arrInchMargins = [tableProps.slideMargin, tableProps.slideMargin, tableProps.slideMargin, tableProps.slideMargin];
         }
         if (tableProps.verbose)
-            console.log("| arrInchMargins .................................. = [".concat(arrInchMargins.join(', '), "]"));
+            void("| arrInchMargins .................................. = [".concat(arrInchMargins.join(', '), "]"));
     }
     // STEP 2: Calculate number of columns
     {
@@ -1212,19 +1212,19 @@ function getSlidesForTableRows(tableRows, tableProps, presLayout, masterSlide) {
             numCols += Number((cellOpts === null || cellOpts === void 0 ? void 0 : cellOpts.colspan) ? cellOpts.colspan : 1);
         });
         if (tableProps.verbose)
-            console.log("| numCols ......................................... = ".concat(numCols));
+            void("| numCols ......................................... = ".concat(numCols));
     }
     // STEP 3: Calculate width using tableProps.colW if possible
     if (!tablePropW && tableProps.colW) {
         tableCalcW = Array.isArray(tableProps.colW) ? tableProps.colW.reduce(function (p, n) { return p + n; }) * EMU : tableProps.colW * numCols || 0;
         if (tableProps.verbose)
-            console.log("| tableCalcW ...................................... = ".concat(tableCalcW / EMU));
+            void("| tableCalcW ...................................... = ".concat(tableCalcW / EMU));
     }
     // STEP 4: Calculate usable width now that total usable space is known (`emuSlideTabW`)
     {
         emuSlideTabW = tableCalcW || inch2Emu((tablePropX ? tablePropX / EMU : arrInchMargins[1]) + arrInchMargins[3]);
         if (tableProps.verbose)
-            console.log("| emuSlideTabW .................................... = ".concat((emuSlideTabW / EMU).toFixed(1)));
+            void("| emuSlideTabW .................................... = ".concat((emuSlideTabW / EMU).toFixed(1)));
     }
     // STEP 5: Calculate column widths if not provided (emuSlideTabW will be used below to determine lines-per-col)
     if (!tableProps.colW || !Array.isArray(tableProps.colW)) {
@@ -1291,7 +1291,7 @@ function getSlidesForTableRows(tableRows, tableProps, presLayout, masterSlide) {
         calcSlideTabH();
         emuTabCurrH += maxCellMarTopEmu + maxCellMarBtmEmu; // Start row height with margins
         if (tableProps.verbose && iRow === 0)
-            console.log("| SLIDE [".concat(tableRowSlides.length, "]: emuSlideTabH ...... = ").concat((emuSlideTabH / EMU).toFixed(1), " "));
+            void("| SLIDE [".concat(tableRowSlides.length, "]: emuSlideTabH ...... = ").concat((emuSlideTabH / EMU).toFixed(1), " "));
         // D: --==[[ BUILD DATA SET ]]==-- (iterate over cells: split text into lines[], set `lineHeight`)
         row.forEach(function (cell, iCell) {
             var _a;
@@ -1357,7 +1357,7 @@ function getSlidesForTableRows(tableRows, tableProps, presLayout, masterSlide) {
          *  |--------|--------|--------|--------|
          */
         if (tableProps.verbose)
-            console.log("\n| SLIDE [".concat(tableRowSlides.length, "]: ROW [").concat(iRow, "]: START..."));
+            void("\n| SLIDE [".concat(tableRowSlides.length, "]: ROW [").concat(iRow, "]: START..."));
         var currCellIdx = 0;
         var emuLineMaxH = 0;
         var isDone = false;
@@ -1372,10 +1372,10 @@ function getSlidesForTableRows(tableRows, tableProps, presLayout, masterSlide) {
             // 2: create a new slide if there is insufficient room for the current row
             if (emuTabCurrH + emuLineMaxH > emuSlideTabH) {
                 if (tableProps.verbose) {
-                    console.log('\n|-----------------------------------------------------------------------|');
+                    void('\n|-----------------------------------------------------------------------|');
                     // prettier-ignore
-                    console.log("|-- NEW SLIDE CREATED (currTabH+currLineH > maxH) => ".concat((emuTabCurrH / EMU).toFixed(2), " + ").concat((srcCell._lineHeight / EMU).toFixed(2), " > ").concat(emuSlideTabH / EMU));
-                    console.log('|-----------------------------------------------------------------------|\n\n');
+                    void("|-- NEW SLIDE CREATED (currTabH+currLineH > maxH) => ".concat((emuTabCurrH / EMU).toFixed(2), " + ").concat((srcCell._lineHeight / EMU).toFixed(2), " > ").concat(emuSlideTabH / EMU));
+                    void('|-----------------------------------------------------------------------|\n\n');
                 }
                 // A: add current row slide or it will be lost (only if it has rows and text)
                 if (currTableRow.length > 0 && currTableRow.map(function (cell) { return cell.text.length; }).reduce(function (p, n) { return p + n; }) > 0)
@@ -1392,7 +1392,7 @@ function getSlidesForTableRows(tableRows, tableProps, presLayout, masterSlide) {
                 calcSlideTabH();
                 emuTabCurrH += maxCellMarTopEmu + maxCellMarBtmEmu; // Start row height with margins
                 if (tableProps.verbose)
-                    console.log("| SLIDE [".concat(tableRowSlides.length, "]: emuSlideTabH ...... = ").concat((emuSlideTabH / EMU).toFixed(1), " "));
+                    void("| SLIDE [".concat(tableRowSlides.length, "]: emuSlideTabH ...... = ").concat((emuSlideTabH / EMU).toFixed(1), " "));
                 // F: reset current table height for this new Slide
                 emuTabCurrH = 0;
                 // G: handle repeat headers option /or/ Add new empty row to continue current lines into
@@ -1436,16 +1436,16 @@ function getSlidesForTableRows(tableRows, tableProps, presLayout, masterSlide) {
         if (currTableRow.length > 0)
             newTableRowSlide.rows.push(currTableRow);
         if (tableProps.verbose) {
-            console.log("- SLIDE [".concat(tableRowSlides.length, "]: ROW [").concat(iRow, "]: ...COMPLETE ...... emuTabCurrH = ").concat((emuTabCurrH / EMU).toFixed(2), " ( emuSlideTabH = ").concat((emuSlideTabH / EMU).toFixed(2), " )"));
+            void("- SLIDE [".concat(tableRowSlides.length, "]: ROW [").concat(iRow, "]: ...COMPLETE ...... emuTabCurrH = ").concat((emuTabCurrH / EMU).toFixed(2), " ( emuSlideTabH = ").concat((emuSlideTabH / EMU).toFixed(2), " )"));
         }
     });
     // STEP 7: Flush buffer / add final slide
     tableRowSlides.push(newTableRowSlide);
     if (tableProps.verbose) {
-        console.log('\n|================================================|');
-        console.log("| FINAL: tableRowSlides.length = ".concat(tableRowSlides.length));
-        tableRowSlides.forEach(function (slide) { return console.log(slide); });
-        console.log('|================================================|\n\n');
+        void('\n|================================================|');
+        void("| FINAL: tableRowSlides.length = ".concat(tableRowSlides.length));
+        tableRowSlides.forEach(function (slide) { return void(slide); });
+        void('|================================================|\n\n');
     }
     // LAST:
     return tableRowSlides;
@@ -1488,13 +1488,13 @@ function genTableToSlides(pptx, tabEleId, options, masterSlide) {
     }
     emuSlideTabW = (opts.w ? inch2Emu(opts.w) : pptx.presLayout.width) - inch2Emu(arrInchMargins[1] + arrInchMargins[3]);
     if (opts.verbose) {
-        console.log('[[VERBOSE MODE]]');
-        console.log('|-- `tableToSlides` ----------------------------------------------------|');
-        console.log("| tableProps.h .................................... = ".concat(opts.h));
-        console.log("| tableProps.w .................................... = ".concat(opts.w));
-        console.log("| pptx.presLayout.width ........................... = ".concat((pptx.presLayout.width / EMU).toFixed(1)));
-        console.log("| pptx.presLayout.height .......................... = ".concat((pptx.presLayout.height / EMU).toFixed(1)));
-        console.log("| emuSlideTabW .................................... = ".concat((emuSlideTabW / EMU).toFixed(1)));
+        void('[[VERBOSE MODE]]');
+        void('|-- `tableToSlides` ----------------------------------------------------|');
+        void("| tableProps.h .................................... = ".concat(opts.h));
+        void("| tableProps.w .................................... = ".concat(opts.w));
+        void("| pptx.presLayout.width ........................... = ".concat((pptx.presLayout.width / EMU).toFixed(1)));
+        void("| pptx.presLayout.height .......................... = ".concat((pptx.presLayout.height / EMU).toFixed(1)));
+        void("| emuSlideTabW .................................... = ".concat((emuSlideTabW / EMU).toFixed(1)));
     }
     // STEP 2: Grab table col widths - just find the first availble row, either thead/tbody/tfoot, others may have colspans, who cares, we only need col widths from 1
     var firstRowCells = document.querySelectorAll("#".concat(tabEleId, " tr:first-child th"));
@@ -1528,7 +1528,7 @@ function genTableToSlides(pptx, tabEleId, options, masterSlide) {
         arrColW.push((intMinWidth > intCalcWidth ? intMinWidth : intCalcWidth));
     });
     if (opts.verbose) {
-        console.log("| arrColW ......................................... = [".concat(arrColW.join(', '), "]"));
+        void("| arrColW ......................................... = [".concat(arrColW.join(', '), "]"));
     }
     // STEP 4: Iterate over each table element and create data arrays (text and opts)
     // NOTE: We create 3 arrays instead of one so we can loop over body then show header/footer rows on first and last page
@@ -1629,7 +1629,7 @@ function genTableToSlides(pptx, tabEleId, options, masterSlide) {
                     arrObjTabFootRows.push(arrObjTabCells);
                     break;
                 default:
-                    console.log("table parsing: unexpected table part: ".concat(part));
+                    void("table parsing: unexpected table part: ".concat(part));
                     break;
             }
         });
@@ -1647,7 +1647,7 @@ function genTableToSlides(pptx, tabEleId, options, masterSlide) {
         if (idxTr > 0)
             opts.y = opts.autoPageSlideStartY || opts.newSlideStartY || arrInchMargins[0];
         if (opts.verbose)
-            console.log("| opts.autoPageSlideStartY: ".concat(opts.autoPageSlideStartY, " / arrInchMargins[0]: ").concat(arrInchMargins[0], " => opts.y = ").concat(opts.y));
+            void("| opts.autoPageSlideStartY: ".concat(opts.autoPageSlideStartY, " / arrInchMargins[0]: ").concat(arrInchMargins[0], " => opts.y = ").concat(opts.y));
         // C: Add table to Slide
         newSlide.addTable(slide.rows, { x: opts.x || arrInchMargins[3], y: opts.y, w: Number(emuSlideTabW) / EMU, colW: arrColW, autoPage: false });
         // D: Add any additional objects
@@ -2374,7 +2374,7 @@ function addTableDefinition(target, tableRows, options, slideLayout, presLayout,
         /*
         if (opt.w && opt.colW) {
             console.warn('addTable: please use either `colW` or `w` - not both (table will use `colW` and ignore `w`)')
-            console.log(`${opt.w} ${opt.colW}`)
+            void(`${opt.w} ${opt.colW}`)
         }
         */
     }
@@ -2433,8 +2433,8 @@ function addTableDefinition(target, tableRows, options, slideLayout, presLayout,
             });
         }
         else {
-            console.log('addTable: tableRows has a bad row. A row should be an array of cells. You provided:');
-            console.log(row);
+            void('addTable: tableRows has a bad row. A row should be an array of cells. You provided:');
+            void(row);
         }
         arrRows.push(newRow);
     });
@@ -2817,9 +2817,9 @@ function createHyperlinkRels(target, text) {
         }
         else if (text && typeof text === 'object' && text.options && text.options.hyperlink && !text.options.hyperlink._rId) {
             if (typeof text.options.hyperlink !== 'object')
-                console.log('ERROR: text `hyperlink` option should be an object. Ex: `hyperlink: {url:\'https://github.com\'}` ');
+                void('ERROR: text `hyperlink` option should be an object. Ex: `hyperlink: {url:\'https://github.com\'}` ');
             else if (!text.options.hyperlink.url && !text.options.hyperlink.slide)
-                console.log('ERROR: \'hyperlink requires either: `url` or `slide`\'');
+                void('ERROR: \'hyperlink requires either: `url` or `slide`\'');
             else {
                 var relId = getNewRelId(target);
                 target._rels.push({
@@ -3449,8 +3449,8 @@ function createExcelWorksheet(chartObject, zip) {
                                         for (var idx = 0; idx < TOT_CAT; idx++) {
                                             _loop_1(idx);
                                         }
-                                        // console.log(strSheetXml) // WIP: CHECK:
-                                        // console.log(`---CHECK ABOVE---------------------`)
+                                        // void(strSheetXml) // WIP: CHECK:
+                                        // void(`---CHECK ABOVE---------------------`)
                                     }
                                 }
                                 strSheetXml_1 += '</sheetData>';
@@ -5021,7 +5021,7 @@ function encodeSlideMediaRels(layout) {
         .filter(function (rel) { return rel.isSvgPng && rel.data; })
         .forEach(function (rel) {
         if (fs) {
-            // console.log('Sorry, SVG is not supported in Node (more info: https://github.com/gitbrent/PptxGenJS/issues/401)')
+            // void('Sorry, SVG is not supported in Node (more info: https://github.com/gitbrent/PptxGenJS/issues/401)')
             rel.data = IMG_BROKEN;
             imageProms.push(Promise.resolve().then(function () { return 'done'; }));
         }
@@ -6400,7 +6400,7 @@ function genXmlTextBody(slideObj) {
     });
     // STEP 7: Close the textBody
     strSlideXml += slideObj._type === SLIDE_OBJECT_TYPES.tablecell ? '</a:txBody>' : '</p:txBody>';
-    console.log('genXmlTextBody:', strSlideXml);
+    void('genXmlTextBody:', strSlideXml);
     // LAST: Return XML
     return strSlideXml;
 }
@@ -6835,7 +6835,7 @@ function makeXmlViewProps() {
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-var VERSION = '3.13.1-beta.10-20260105';
+var VERSION = '3.13.2-20260105';
 var PptxGenJS = /** @class */ (function () {
     function PptxGenJS() {
         var _this = this;
@@ -7375,7 +7375,7 @@ var PptxGenJS = /** @class */ (function () {
                         ;
                         // DEPRECATED: @deprecated v3.5.0 - fileName - [[remove in v4.0.0]]
                         if (typeof props === 'string')
-                            console.log('Warning: `writeFile(filename)` is deprecated - please use `WriteFileProps` argument (v3.5.0)');
+                            void('Warning: `writeFile(filename)` is deprecated - please use `WriteFileProps` argument (v3.5.0)');
                         propsExpName = typeof props === 'object' && (props === null || props === void 0 ? void 0 : props.fileName) ? props.fileName : typeof props === 'string' ? props : '';
                         propsCompress = typeof props === 'object' && (props === null || props === void 0 ? void 0 : props.compression) ? props.compression : false;
                         fileName = propsExpName ? (propsExpName.toString().toLowerCase().endsWith('.pptx') ? propsExpName : propsExpName + '.pptx') : 'Presentation.pptx';
