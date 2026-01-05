@@ -363,6 +363,11 @@ export interface TextBaseProps {
 	 */
 	fontFace?: string
 	/**
+	 * Font face name
+	 * @example 'Arial' // Arial font
+	 */
+	fontFaceEn?: string
+	/**
 	 * Font size
 	 * @example 12 // Font size 12
 	 */

@@ -66,7 +66,7 @@ export function encodeXmlEntities (xml: string): string {
 	// Split the string by <m:oMath> elements to preserve math content
 	const parts = xml.toString().split(/(<m:oMath[^>]*>[\s\S]*?<\/m:oMath>)/g)
 	// Process only the parts that are not inside <m:oMath> tags
-	return parts.map((part, index) => {
+	const str = parts.map((part, index) => {
 		// Odd indices are the math content that should not be encoded
 		if (index % 2 === 1 && part.startsWith('<m:oMath') && part.includes('</m:oMath>')) {
 			return part
@@ -74,6 +74,8 @@ export function encodeXmlEntities (xml: string): string {
 		// Even indices are outside math tags and should be encoded
 		return part.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;')
 	}).join('')
+	console.log('str', str)
+	return str
 }
 
 /**

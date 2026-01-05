@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Notes
+
+## 3.13.1-beta.10-20260105
+
+- Added fontFaceEn property for English font face
+
+## 3.13.1-beta.9-20250924
+
+- Added encodeXmlEntities
+
 ## 3.13.1-beta.8-20250923
 
 - Added `mathBlock` property for text  
