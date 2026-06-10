@@ -2,16 +2,17 @@
   "compilerOptions": {
 	"strictNullChecks": false, // true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "./node_modules",
     "declaration": true,
     "declarationDir": "./out/defs",
     "lib": ["dom", "es2015", "es2017.object"],
     "module": "es6",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "noImplicitAny": false,
     "outDir": "./out",
+    "rootDir": "./src",
     "sourceMap": true,
-    "target": "es5"
+    "target": "ES2020",
+    "ignoreDeprecations": "6.0"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]
